@@ -4,7 +4,10 @@ WORKDIR /app
 
 # Install dependencies
 COPY package*.json ./
-RUN npm ci
+# Use npm install instead of `npm ci` because this repo doesn't include
+# a lockfile in the build context. `npm install` handles missing lockfile
+# and avoids the CI error seen during docker build.
+RUN npm install --legacy-peer-deps --no-audit --no-fund
 
 # Copy source and build
 COPY . .
